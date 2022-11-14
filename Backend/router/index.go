@@ -40,8 +40,8 @@ func (server *router) Serve(port string, ctx *configuration.Context) {
 }
 
 // General prefixing method
-func (r *router) PathPrefix(url string,prefix string,handle http.HandlerFunc) {
-	 Mux.PathPrefix(url).Subrouter().HandleFunc(prefix,handle)
+func (r *router) PathPrefix(url string) *mux.Router{
+	return Mux.PathPrefix(url).Subrouter()
 }
 
 // Cors handling

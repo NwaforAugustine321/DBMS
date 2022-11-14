@@ -2,21 +2,19 @@ package main
 
 import (
 	"dbms/configuration"
-	healthcheck "dbms/healthCheck"
 	"dbms/router"
+	"dbms/routes"
 	"fmt"
 )
 
-func init(){
+func init() {
 	fmt.Println("DATABASE MANAGEMENT SOFTWARE RUNNING")
 }
 
-func main(){
-   application := router.NewRouter()
-   healthCheck := healthcheck.NewHealthCheck()
-   applicationContext := configuration.Context{}
+func main() {
+	application := router.NewRouter()
+	applicationContext := configuration.Context{}
+	routes.HealthCheckRoutes()
 
-   application.Get("/heartbeat",healthCheck.CheckServer)
-
-   application.Serve(":4000",&applicationContext)
+	application.Serve(":4000", &applicationContext)
 }
