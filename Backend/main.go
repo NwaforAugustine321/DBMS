@@ -4,6 +4,7 @@ import (
 	"dbms/configuration"
 	"dbms/router"
 	"dbms/routes"
+	"dbms/routes/userRoutes"
 	"fmt"
 )
 
@@ -14,7 +15,8 @@ func init() {
 func main() {
 	application := router.NewRouter()
 	applicationContext := configuration.Context{}
-	routes.HealthCheckRoutes()
+	routes.HealthCheckRoutes(application)
+	userRoutes.NewUserRoutes(application)
 
 	application.Serve(":4000", &applicationContext)
 }

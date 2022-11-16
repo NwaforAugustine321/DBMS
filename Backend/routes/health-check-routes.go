@@ -5,8 +5,8 @@ import (
 	"dbms/router"
 )
 
-func HealthCheckRoutes() {
-	router := router.NewRouter()
+func HealthCheckRoutes(router router.RouterInterface) {
+	
 	healthCheck := healthcheck.NewHealthCheck()
 
 	routerPrefixPath := router.PathPrefix("/health-check")
