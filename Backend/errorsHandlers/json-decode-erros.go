@@ -26,6 +26,8 @@ func (message *JsonErrorParser) WriteJsonToStream(io http.ResponseWriter) {
 		log.Fatal("json error parser")
 	}
 
+	io.WriteHeader(message.Status)
+	
 	io.Write(response)
 
 }

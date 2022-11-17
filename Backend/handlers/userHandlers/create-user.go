@@ -3,6 +3,7 @@ package userHandlers
 import (
 	"dbms/errorsHandlers"
 	"dbms/repo/interfaces"
+	"dbms/services"
 	"dbms/use-cases/users"
 	"encoding/json"
 	"net/http"
@@ -10,22 +11,23 @@ import (
 
 func CreateUser(response http.ResponseWriter, request *http.Request) {
 	var data interfaces.User
+
 	err := json.NewDecoder(request.Body).Decode(&data)
 
 	if err != nil {
 
 		var jsonError = &errorsHandlers.JsonErrorParser{
-			Message:   "Failed to parse body ",
-			Status: 400,
-			Err: err.Error(),
+			Message: "Invalid payload",
+			Status:  400,
+			Err:     err.Error(),
 		}
-  
+
 		jsonError.WriteJsonToStream(response)
 		jsonError.PrintJsonError()
-
 		return
 	}
 
+	services.ValidateStruct(data)
 	users.CreateUser(data)
 	response.Write([]byte(" creating user "))
 }
