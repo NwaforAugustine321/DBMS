@@ -1,13 +1,15 @@
 package users
 
 import (
+	"context"
 	"dbms/repo/interfaces"
-	"dbms/repo/sql/userRepo"
 )
 
 
-var userRepository = userRepo.NewUserSource()
 
-func CreateUser(userDetails interfaces.User){
-  userRepository.CreateUser(userDetails)
+
+
+
+func CreateUser(ctx context.Context , userDetails interfaces.User){
+  
 }

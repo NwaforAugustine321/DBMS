@@ -7,7 +7,7 @@ import (
 
 
 func NewUserRoutes(router router.RouterInterface){
-   pathPrefix := 	router.PathPrefix("/user")
-
-   pathPrefix.HandleFunc("/create",userHandlers.CreateUser).Methods("POST")
+   
+   router.Post("/user/create",userHandlers.CreateUser)
+  
 }

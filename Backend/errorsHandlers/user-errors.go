@@ -7,19 +7,19 @@ import (
 	"net/http"
 )
 
-type JsonErrorParser struct {
+type UserParser struct {
 	Message string `json:"message"`
 	Status  int    `json:"status"`
 	Err     string `json:"-"`
 }
 
-func (message *JsonErrorParser) Error()string {
+func (message *UserParser) Error()string {
 	err := fmt.Sprintf("status %d: err :  %v message : %v ", message.Status, message.Err, message.Message)
 	fmt.Println(err)
 	return err
 }
 
-func (message *JsonErrorParser) WriteJsonToStream(io http.ResponseWriter) {
+func (message *UserParser) WriteJsonToStream(io http.ResponseWriter) {
 
 	response, err := json.MarshalIndent(message, "", "")
 
