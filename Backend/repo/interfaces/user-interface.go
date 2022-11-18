@@ -18,5 +18,5 @@ type UserSourceInterface interface {
 
 type UserServiceInterface interface{
 	CreateUser(ctx context.Context, data User)
-	ValidateUserCreation(data User)interface{} 
+	ValidateUserCreation(data User)error
 }

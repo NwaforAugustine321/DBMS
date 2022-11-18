@@ -21,6 +21,6 @@ func (t newUser) CreateUser(ctx context.Context, data interfaces.User){
     userRepository.CreateUser(ctx,data)
 }
 
-func (t newUser) ValidateUserCreation( data interfaces.User) interface{}  {
+func (t newUser) ValidateUserCreation( data interfaces.User) error {
     return validation.ValidateUserCreation(data)
 }
