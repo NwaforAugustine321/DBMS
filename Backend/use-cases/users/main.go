@@ -17,10 +17,10 @@ func NewUser( userRepo  interfaces.UserSourceInterface,validation interfaces.Use
   return &newUser{}
 }
 
-func (t newUser) CreateUser(ctx context.Context, data interfaces.User){
+func (t *newUser) CreateUser(ctx context.Context, data interfaces.User){
     userRepository.CreateUser(ctx,data)
 }
 
-func (t newUser) ValidateUserCreation( data interfaces.User) error {
+func (t *newUser) ValidateUserCreation( data interfaces.User) error {
     return validation.ValidateUserCreation(data)
 }
