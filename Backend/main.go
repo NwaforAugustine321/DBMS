@@ -2,21 +2,51 @@ package main
 
 import (
 	"dbms/configuration"
+	"dbms/configuration/databaseConfig"
+	"dbms/errorsHandlers"
 	"dbms/router"
 	"dbms/routes"
 	"dbms/routes/userRoutes"
 	"fmt"
+	"log"
 )
 
 func init() {
-	fmt.Println("DATABASE MANAGEMENT SOFTWARE RUNNING")
+	fmt.Println("INVOICE GENERATOR SOFTWARE RUNNING")
 }
 
-func main() {
-	application := router.NewRouter()
-	applicationContext := configuration.Context{}
-	routes.HealthCheckRoutes(application)
-	userRoutes.NewUserRoutes(application)
+const (
+	dsn = "root:@Root321@tcp(127.0.0.1:3306)/AtlasDB?charset=utf8mb4&parseTime=True&loc=Local"
+)
 
-	application.Serve(":4000", &applicationContext)
+func main() {
+
+	// SET UP APPLICATION AND CONTEXT CONFIGURATIONS
+	applicationRouter := router.NewRouter()
+	applicationContext := configuration.Context{}
+
+	//SET UP APIS ROUTES
+	routes.HealthCheckRoutes(applicationRouter)
+	userRoutes.NewUserRoutes(applicationRouter)
+
+	//INIT DATABASE CONNECTION
+	db := databaseConfig.NewDatabase()
+	err := db.InitDB(dsn)
+	if err, ok := err.(*errorsHandlers.DataBaseError); ok {
+		if err != nil {
+			log.Fatal(err.Error())
+		}
+
+	}
+
+	err = db.Migrate()
+
+	if err, ok := err.(*errorsHandlers.DataBaseError); ok {
+		if err != nil {
+			log.Fatal(err.Error())
+		}
+
+	}
+
+	applicationRouter.Serve(":4000", &applicationContext)
 }
