@@ -4,6 +4,7 @@ import (
 	"dbms/errorsHandlers"
 	"dbms/models"
 	"dbms/repo/interfaces"
+	"strings"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -54,4 +55,16 @@ func (db *database) Migrate()error {
 	}
 
 	return nil
+}
+
+func (db *database) Get(table string, columns []string, where string ,model interface{},conditions...interface{}) interface{}{
+	
+   column := strings.Join(columns,",")
+  // condition := strings.Join(conditions...,",")
+   
+   query := "SELECT" + " " + column + " " + "FROM" + " " + table + " " + " " + where 
+
+    db.DB.Raw(query,conditions...).Scan(&model)
+
+	return model
 }

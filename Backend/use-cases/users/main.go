@@ -2,13 +2,14 @@ package users
 
 import (
 	"context"
+	"dbms/configuration/databaseConfig"
 	"dbms/repo/interfaces"
 	"dbms/repo/sql/userRepo"
 	"dbms/services"
 )
 
-
-var userRepository = userRepo.NewUserSource()
+var database = databaseConfig.NewDatabase()
+var userRepository = userRepo.NewUserSource(database)
 var validation = services.NewValidation()
 
 type newUser struct{}

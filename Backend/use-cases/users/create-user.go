@@ -11,5 +11,5 @@ import (
 
 
 func CreateUser(ctx context.Context , userDetails interfaces.User){
-  
+  CreateUser(ctx,userDetails)
 }

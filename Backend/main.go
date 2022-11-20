@@ -48,5 +48,6 @@ func main() {
 
 	}
 
+	
 	applicationRouter.Serve(":4000", &applicationContext)
 }

@@ -7,22 +7,29 @@ import (
 	"gorm.io/gorm"
 )
 
-type db struct{}
+type DB struct{}
 
 var databaseInstance = database.NewDatabase()
 
 func NewDatabase() interfaces.DatabaseInterface {
-	return &db{}
+	return &DB{}
 }
 
-func (db *db) InitDB(dsn string) error {
+func (db *DB) InitDB(dsn string) error {
 	return databaseInstance.InitDB(dsn)
 }
 
-func (db *db) DBInstance() *gorm.DB {
+func (db *DB) DBInstance() *gorm.DB {
 	return databaseInstance.DBInstance()
 }
 
-func (db *db) Migrate() error {
+func (db *DB) Migrate() error {
 	return databaseInstance.Migrate()
+}
+
+func (db *DB) Get(table string,columns []string, where string, model interface{},conditions ...interface{}) interface{}{
+	
+	return databaseInstance.Get(table,columns,where,model,conditions)
+	
+  
 }

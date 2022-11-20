@@ -2,6 +2,7 @@ package userHandlers
 
 import (
 	"context"
+	"dbms/configuration/databaseConfig"
 	"dbms/errorsHandlers"
 	"dbms/repo/interfaces"
 	"dbms/repo/sql/userRepo"
@@ -14,7 +15,7 @@ import (
 )
 
 var (
-	userRepository = userRepo.NewUserSource()
+	userRepository = userRepo.NewUserSource(databaseConfig.NewDatabase())
 	validation     = services.NewValidation()
 	user           = users.NewUser(userRepository, validation)
 )
