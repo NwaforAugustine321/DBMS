@@ -12,11 +12,12 @@ type User struct {
 }
 
 type UserSourceInterface interface {
-	CreateUser(ctx context.Context, data User)
-	
+	CreateUser(ctx context.Context, data User)(error,string)
+	GetAllUser(ctx context.Context)([]User,error)
 }
 
 type UserServiceInterface interface{
-	CreateUser(ctx context.Context, data User)
+	CreateUser(ctx context.Context, data User)(error,string)
+	GetAllUser(ctx context.Context)([]User,error)
 	ValidateUserCreation(data User)error
 }

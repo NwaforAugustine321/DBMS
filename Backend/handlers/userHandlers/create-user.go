@@ -15,9 +15,7 @@ import (
 )
 
 var (
-	userRepository = userRepo.NewUserSource(databaseConfig.NewDatabase())
-	validation     = services.NewValidation()
-	user           = users.NewUser(userRepository, validation)
+	user = users.NewUser(userRepo.NewUserSource(databaseConfig.NewDatabase()), services.NewValidation())
 )
 
 func CreateUser(response http.ResponseWriter, request *http.Request) {
@@ -41,6 +39,7 @@ func CreateUser(response http.ResponseWriter, request *http.Request) {
 
 	ctx, cancel := context.WithTimeout(request.Context(), 30*time.Millisecond)
 	defer cancel()
+
 	validationError := user.ValidateUserCreation(data)
 
 	if err, ok := validationError.(*errorsHandlers.UserParser); ok {
@@ -50,7 +49,29 @@ func CreateUser(response http.ResponseWriter, request *http.Request) {
 		}
 
 	}
-	
-	user.CreateUser(ctx, data)
-	response.Write([]byte(" creating user "))
+
+	err, message := user.CreateUser(ctx, data)
+
+	if err, ok := err.(*errorsHandlers.DataBaseError); ok {
+		if err != nil {
+			err.WriteJsonToStream(response)
+			fmt.Print(err.Error())
+			return
+		}
+	}
+
+	_, responseErr := response.Write([]byte(message))
+
+	if responseErr != nil {
+		jsonError := &errorsHandlers.JsonErrorParser{
+			Message: "Internal server error",
+			Status:  500,
+			Err:     responseErr.Error(),
+		}
+
+		jsonError.WriteJsonToStream(response)
+		logMessage := jsonError.Error()
+		fmt.Println(logMessage)
+		return
+	}
 }

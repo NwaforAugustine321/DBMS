@@ -27,9 +27,3 @@ func (db *DB) Migrate() error {
 	return databaseInstance.Migrate()
 }
 
-func (db *DB) Get(table string,columns []string, where string, model interface{},conditions ...interface{}) interface{}{
-	
-	return databaseInstance.Get(table,columns,where,model,conditions)
-	
-  
-}

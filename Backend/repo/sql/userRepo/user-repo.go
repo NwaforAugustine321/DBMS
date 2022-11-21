@@ -2,31 +2,52 @@ package userRepo
 
 import (
 	"context"
+	"dbms/errorsHandlers"
 	"dbms/models"
 	"dbms/repo/interfaces"
-	"fmt"
+
+	"github.com/google/uuid"
 )
 
-type userSource struct{
-	db interfaces.DatabaseInterface
+type userSource struct {
+	DBRepository interfaces.DatabaseInterface
 }
 
 func NewUserSource(db interfaces.DatabaseInterface) interfaces.UserSourceInterface {
 	return &userSource{db}
 }
 
-func (user *userSource) CreateUser(ctx context.Context, data interfaces.User) {
-	// var userModel models.Users
-	// userModel.UserName = data.UserName
-	// userModel.UserEmail = data.UserEmail
-	// userModel.UserPhone = data.UserPhone
-	// userModel.Profile = data.Profile
-	// userModel.UserID = uuid.UUID{}
-	// databaseConfig.NewDatabase().DBInstance().Create(&userModel)
-	var result  models.Users
-   var r = user.db.Get("Users",[]string{"user_name","user_email"},"WHERE user_name = ? AND user_email = ?",&result, "austine","nea@gmail.com")
-   fmt.Println(r)
+func (user *userSource) CreateUser(ctx context.Context, data interfaces.User) (error, string) {
+	var existingUser []models.Users
+	var userModel models.Users
+
+	userModel.UserName = data.UserName
+	userModel.UserEmail = data.UserEmail
+	userModel.UserPhone = data.UserPhone
+	userModel.Profile = data.Profile
+	userModel.UserID = uuid.UUID{}
+
+	user.DBRepository.DBInstance().Where("user_email = ?", data.UserEmail).First(&existingUser)
+
+	if length := len(existingUser); length > 0 {
+
+		return &errorsHandlers.DataBaseError{
+			Status:  400,
+			Message: "User already exit",
+		}, ""
+	}
+
+	user.DBRepository.DBInstance().Create(&userModel)
+	return nil, "User created successfully"
+
 }
 
-	
 
+
+func (user *userSource) GetAllUser(ctx context.Context) ([]interfaces.User , error) {
+	var userModel []interfaces.User
+
+	user.DBRepository.DBInstance().Find(&userModel)
+
+	return userModel, nil
+}
