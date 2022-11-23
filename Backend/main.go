@@ -6,6 +6,7 @@ import (
 	"dbms/errorsHandlers"
 	"dbms/router"
 	"dbms/routes"
+	"dbms/routes/invoiceRoutes"
 	"dbms/routes/userRoutes"
 	"fmt"
 	"log"
@@ -28,6 +29,7 @@ func main() {
 	//SET UP APIS ROUTES
 	routes.HealthCheckRoutes(applicationRouter)
 	userRoutes.NewUserRoutes(applicationRouter)
+	invoiceRoutes.NewInvoiceRoutes(applicationRouter)
 
 	//INIT DATABASE CONNECTION
 	db := databaseConfig.NewDatabase()
